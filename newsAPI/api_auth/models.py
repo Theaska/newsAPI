@@ -11,12 +11,15 @@ class CustomUser(AbstractUser):
 
     def get_access_token(self):
         from .token import AuthToken
-        return AuthToken(self).token
+        return AuthToken(self)
 
     def get_refresh_token(self):
         from .token import RefreshToken
-        refresh_token = RefreshToken()
-        self.refresh_token_hash = hashlib.md5(refresh_token.token.encode("utf-8"))
-        self.refresh_token_expire = refresh_token.expired_time
-        return refresh_token.token
+        return RefreshToken(self)
+    
+    def update_refresh_token(self, token):
+        self.refresh_token_hash = token.token_md5_hash.hexdigest()
+        self.refresh_token_expire = token.expired_time
+        self.save()
+        
 
