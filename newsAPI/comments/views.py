@@ -44,7 +44,7 @@ class CommentViewSet(ModelViewSet):
         permissions_lst = []
         if self.action in ('create', 'answer'):
             permissions_lst = [permissions.IsAuthenticated, IsNotBanned]
-        if self.action == 'delete':
+        if self.action == 'destroy':
             permissions_lst.append(permissions.IsAdminUser)
         return [permission() for permission in permissions_lst] + super().get_permissions()
 

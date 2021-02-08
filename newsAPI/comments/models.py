@@ -17,7 +17,7 @@ class Comment(MPTTModel):
                                null=True)
     post = models.ForeignKey('news.NewsPost', verbose_name=_('post'), related_name='comments', on_delete=models.CASCADE)
     author = models.ForeignKey(UserModel, related_name='comments', on_delete=models.CASCADE, null=True)
-    text = RichTextField(config_name='simple', null=True)
+    text = RichTextField(config_name='simple')
     date = models.DateTimeField(auto_now=True)
 
     class Meta:

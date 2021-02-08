@@ -14,10 +14,8 @@ class NewsPostViewSet(ModelViewSet):
 
     def get_permissions(self):
         permission_lst = []
-        if self.action == 'destroy':
+        if self.action in ('destroy', 'create'):
             permission_lst = [permissions.IsAdminUser, ]
-        if self.action == 'create':
-            permission_lst = [permissions.IsAuthenticated, ]
         return [permission() for permission in permission_lst] + super().get_permissions()
 
 
