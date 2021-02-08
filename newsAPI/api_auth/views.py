@@ -10,7 +10,7 @@ from .exceptions import CanNotBanned, CanNotUnbanned
 from .serializers import UserSerializer, ObtainTokensPairSerializer, ObtainAccessTokenSerializer
 
 
-class CreateUserView(ModelViewSet):
+class UserViewSet(ModelViewSet):
     model = get_user_model()
     serializer_class = UserSerializer
 
@@ -19,7 +19,7 @@ class CreateUserView(ModelViewSet):
 
     def get_permissions(self):
         permissions_lst = []
-        if self.action in ('list', 'ban_user'):
+        if self.action in ('list', 'ban_user', 'retrieve'):
             permissions_lst.append(permissions.IsAdminUser)
         return [permission() for permission in permissions_lst]
 
