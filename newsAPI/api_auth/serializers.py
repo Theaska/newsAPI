@@ -8,13 +8,14 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from jwt import exceptions
 
-from .token import AuthToken, RefreshToken
+from .token import RefreshToken
 
 user_model = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
     """ Serializer for creating/signup new user """
+    is_banned = serializers.ReadOnlyField()
     
     def create(self, data):
         user = self.Meta.model.objects.create(
@@ -27,7 +28,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = user_model
-        fields = ('id', 'username', 'password', 'email')
+        fields = ('id', 'username', 'password', 'email', 'is_banned')
 
 
 class ObtainTokensPairSerializer(serializers.Serializer):
