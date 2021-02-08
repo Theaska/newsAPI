@@ -12,17 +12,11 @@ from .token import AuthToken, RefreshToken
 
 class CreateUserView(CreateAPIView):
     model = get_user_model()
-    permissions_classes = [
-        permissions.NOT, permissions.IsAuthenticated,
-    ]
     serializer_class = UserSerializer
 
 
 class ObtainTokensPairView(GenericAPIView):
     serializer_class = ObtainTokensPairSerializer
-    permissions_classes = [
-        permissions.NOT, permissions.IsAuthenticated,
-    ]
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)

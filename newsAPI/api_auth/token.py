@@ -33,9 +33,10 @@ class Token:
     algorithm = "HS256"
     lifetime = 60*60
 
-    def __init__(self, algorithm=None, lifetime=None):
-        self._validate_algorithm(algorithm)
-        self.algorithm = algorithm
+    def __init__(self, algorithm=None):
+        if algorithm:
+            self._validate_algorithm(algorithm)
+            self.algorithm = algorithm
         self._expired_time, self._token = self._generate_token()
         
     def _validate_algorithm(self, algorithm):

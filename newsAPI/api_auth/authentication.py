@@ -20,7 +20,7 @@ class TokenAuthentication(BaseAuthentication):
         encoded_token = headers.get(header_auth_key)
         if encoded_token:
             token = self.encode_and_get_token(encoded_token)
-            return (self.get_user(token), token)
+            return self.get_user(token), token
 
     def encode_and_get_token(self, encoded_token):
         try:
@@ -49,4 +49,3 @@ class TokenAuthentication(BaseAuthentication):
 
     def authenticate_header(self, request):
         return getattr(settings, 'HEADER_TOKEN_NAME', 'ACCESS-TOKEN')
-        

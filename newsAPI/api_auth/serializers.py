@@ -14,6 +14,8 @@ user_model = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
+    """ Serializer for creating/signup new user """
+    
     def create(self, data):
         user = self.Meta.model.objects.create(
             username=data['username'],
@@ -29,23 +31,34 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ObtainTokensPairSerializer(serializers.Serializer):
+    """ Serializer for creating new access and refresh tokens after authentication """
+    
     username = serializers.CharField()
     password = serializers.CharField()
 
     def validate(self, attrs):
         data = {}
+        
+        # trying to get user
         user = authenticate(**attrs)
         if not user:
             raise serializers.ValidationError(_('Wrong username or password'))
+        
+        # if user exists returns access token and refresh token
         access_token = user.get_access_token()
         refresh_token = user.get_refresh_token()
+        
+        # also save hash of refresh token in db
         user.update_refresh_token(refresh_token)
+        
         data['access'] = access_token.b64_encoded_token
         data['refresh'] = refresh_token.b64_encoded_token
         return data
 
 
 class ObtainAccessTokenSerializer(serializers.Serializer):
+    """ Serializer for creating new pairs of access and refresh tokens using refresh token """
+    
     refresh_token = serializers.CharField()
 
     def validate(self, data):
@@ -66,9 +79,11 @@ class ObtainAccessTokenSerializer(serializers.Serializer):
         except user_model.DoesNotExist:
             raise serializers.ValidationError(_('Can not find user with refresh token'))
         
+        # compare hash refresh token from request with hash RT in DB
         if not user.refresh_token_hash == hashlib.md5(token).hexdigest():
             raise serializers.ValidationError(_('Invalid refresh token for user'))
         
+        # check if time is ended
         if not self.validate_exp_time(decoded_token):
             raise serializers.ValidationError(_('Lifetime of your refresh token'))
         else:

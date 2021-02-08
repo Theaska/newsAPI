@@ -42,9 +42,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
-    'rest_framework.authtoken',
+
+    'ckeditor',
+    'mptt',
 
     'api_auth',
+    'news',
+    'comments',
 ]
 
 MIDDLEWARE = [
@@ -126,4 +130,28 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'static/'
 AUTH_USER_MODEL = 'api_auth.CustomUser'
+
+CKEDITOR_UPLOAD_PATH = 'upload/'
+CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/'
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Custom',
+        'toolbar_Custom': [
+            ['Bold', 'Italic', 'Underline'],
+            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+            ['Link', 'Unlink'],
+            ['RemoveFormat', 'Source', 'Image']
+        ],
+        "codeSnippet_theme": "xcode",
+        "skin": "moono-lisa",
+        'extraPlugins': ','.join(['uploadimage', ])
+    },
+    'simple': {
+        'toolbar': 'Custom',
+        'toolbar_Custom': [
+            ['Bold', 'Italic', 'Underline'],
+        ],
+    }
+}
