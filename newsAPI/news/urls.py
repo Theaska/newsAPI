@@ -6,5 +6,5 @@ app_name = 'news'
 
 urlpatterns = [
     path('', NewsPostViewSet.as_view({'get': 'list', 'post': 'create'})),
-    path('<int:pk>/', NewsPostViewSet.as_view({'get': 'retrieve', 'delete': 'destroy'})),
+    path('<int:pk>/', NewsPostViewSet.as_view({'get': 'retrieve', 'delete': 'destroy', 'put': 'partial_update'})),
 ]
