@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import ugettext_lazy as _
 
+from api_auth.exceptions import CanNotBanned, CanNotUnbanned
+from helpers.send_notification import send_notification
+
 
 class CustomUser(AbstractUser):
     email = models.EmailField(_('email'), unique=True)
@@ -26,14 +29,27 @@ class CustomUser(AbstractUser):
         if not self.is_banned:
             self.is_banned = True
             self.save()
-            send_notification()
+            send_notification(
+                template_name='api_auth/notify_user_banned.html',
+                subject=_('You have been banned'),
+                context={'user': self},
+                receivers=[self.email, ]
+            )
+        else:
+            raise CanNotBanned(_('This user has already banned'))
 
     def unban(self):
         if self.is_banned:
             self.is_banned = False
             self.save()
-            send_notification()
+            send_notification(
+                template_name='api_auth/notify_user_unbanned.html',
+                subject=_('You have been unbanned'),
+                receivers=[self.email, ],
+                context={'user': self}
+            )
+        else:
+            raise CanNotUnbanned(_('This user is not banned'))
 
 
-def send_notification():
-    pass
+

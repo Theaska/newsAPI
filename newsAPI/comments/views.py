@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import permissions, status
 
-from api_auth.models import send_notification
+from helpers.send_notification import send_notification
 from .models import Comment
 from .serializers import CommentSerializer, AnswerSerializer
 from api_auth.permissions import IsNotBanned
@@ -37,7 +37,14 @@ class CommentViewSet(ModelViewSet):
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        send_notification()
+        main_comment = self.get_object()
+        new_comment = serializer.save()
+        receiver_email = main_comment.author.email if main_comment.author else None
+        if receiver_email and new_comment.author != main_comment.author:
+            send_notification(template_name='comments/new_answer_to_comment.html',
+                              subject='New answer to your comment',
+                              receivers=[receiver_email, ],
+                              context={'comment': new_comment})
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def get_permissions(self):

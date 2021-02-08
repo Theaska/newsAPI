@@ -1,10 +1,12 @@
 from django.contrib.auth import get_user_model
+from django.utils.translation import gettext_lazy as _
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework import permissions
 
+from .exceptions import CanNotBanned, CanNotUnbanned
 from .serializers import UserSerializer, ObtainTokensPairSerializer, ObtainAccessTokenSerializer
 
 
@@ -23,13 +25,23 @@ class CreateUserView(ModelViewSet):
 
     def ban_user(self, *args, **kwargs):
         user = self.get_object()
-        user.ban()
-        return Response(data={'message': 'User has been banned'}, status=status.HTTP_200_OK)
+        try:
+            user.ban()
+        except CanNotBanned as e:
+            message = str(e)
+        else:
+            message = _('User has been banned')
+        return Response(data={'message': message}, status=status.HTTP_200_OK)
 
     def unban_user(self, *args, **kwargs):
         user = self.get_object()
-        user.unban()
-        return Response(data={'message': 'User has been unbanned'}, status=status.HTTP_200_OK)
+        try:
+            user.unban()
+        except CanNotUnbanned as e:
+            message = str(e)
+        else:
+            message = _('User has been unbanned')
+        return Response(data={'message': message}, status=status.HTTP_200_OK)
 
 
 class ObtainTokensPairView(GenericAPIView):
