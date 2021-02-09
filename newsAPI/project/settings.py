@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 from .api_settings import *
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -85,13 +86,17 @@ WSGI_APPLICATION = 'project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASS'),
+        'HOST': os.environ.get('DB_HOST'),
+        'CONN_MAX_AGE': 60,
     }
 }
+
 
 
 # Password validation
@@ -126,13 +131,17 @@ USE_L10N = True
 
 USE_TZ = True
 
+AUTH_USER_MODEL = 'api_auth.CustomUser'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'static/'
-AUTH_USER_MODEL = 'api_auth.CustomUser'
+STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, '..', 'static'))
+STATIC_URL = 'app/static/'
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+
 
 CKEDITOR_UPLOAD_PATH = 'upload/'
 CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/'

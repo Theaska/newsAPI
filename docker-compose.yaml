@@ -1,0 +1,33 @@
+version: '3'
+services:
+  webapp:
+    build: .
+    entrypoint: >
+      bash -c "chmod +x /app/migrations.sh &&
+               chmod +x /app/run.sh
+               cat /app/migrations.sh | sed -i 's/\r//' /app/migrations.sh &&
+                /app/migrations.sh &&
+                python3 /app/newsAPI/manage.py collectstatic --noi &&
+                python3 /app/newsAPI/manage.py runserver 0:80"
+    volumes:
+      - .:/app
+    environment:
+      - DJANGO_SETTINGS_MODULE=project.settings
+      - DB_NAME=newsAPI
+      - DB_USER=postgres
+      - DB_PASS=postgres
+      - DB_HOST=postgres
+    ports:
+      - "80:80"
+    depends_on:
+      - postgres
+    tty: true
+    links:
+      - postgres:postgres
+
+  postgres:
+    image: postgres:11-alpine
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
