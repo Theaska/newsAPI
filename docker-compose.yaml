@@ -8,7 +8,6 @@ services:
                 cat /app/migrations.sh | sed -i 's/\r//' /app/migrations.sh &&
                 /app/migrations.sh &&
                 python3 /app/newsAPI/manage.py collectstatic --noi &&
-                python3 /app/newsAPI/manage.py createsuperuser --noinput &&
                 python3 /app/newsAPI/manage.py runserver 0:80"
     volumes:
       - .:/app
