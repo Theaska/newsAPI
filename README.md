@@ -2,11 +2,11 @@
 Тестовое задание представляет собой небольшое API, написанное при помощи фреймворка Django для создания новостных постов. Аутентификация происходит с помощью JSON Web Token.
 Использовались следующие библиотеки:
 
- - djangorestframework   - для создания REST API и удобной работы с ним. 
- - pyjwt                 - для генерации ключей JSON Web Token. 
- - ckeditor              - удобный плагин для расширения админки. 
+ - [djangorestframework](https://github.com/encode/django-rest-framework/tree/master)    - для создания REST API и удобной работы с ним. 
+ - [pyjwt](https://github.com/jpadilla/pyjwtpyjwt)   - для генерации ключей JSON Web Token. 
+ - [ckeditor](https://github.com/django-ckeditor/django-ckeditor)              - удобный плагин для расширения админки. 
  Дает возможность расширять функционал обычного текстового поля (позволяет оформлять заголовки, стиль текст, добавлять картинки)
- - django-mptt           - для работы с иерархической структурой в БД.
+ - [django-mptt](https://github.com/django-mptt/django-mptt)   - для работы с иерархической структурой в БД.
 
 Для развертывания проекта:
 
