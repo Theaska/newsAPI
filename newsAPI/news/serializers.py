@@ -9,7 +9,7 @@ class NewsSerializer(serializers.ModelSerializer):
     author = serializers.HiddenField(
         default=serializers.CurrentUserDefault()
     )
-    root_comments = CommentSerializer(many=True, source='comments')
+    root_comments = CommentSerializer(many=True, source='comments', read_only=True)
 
     @staticmethod
     def get_post_author(obj):

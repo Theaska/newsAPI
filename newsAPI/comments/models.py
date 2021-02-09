@@ -3,6 +3,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import get_user_model
 from ckeditor.fields import RichTextField
+from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 
 UserModel = get_user_model()
@@ -10,11 +11,11 @@ MAX_DEPTH = 5
 
 
 class Comment(MPTTModel):
-    parent = models.ForeignKey('self',
-                               related_name='child_comments',
-                               on_delete=models.CASCADE,
-                               blank=True,
-                               null=True)
+    parent = TreeForeignKey('self',
+                            related_name='child_comments',
+                            on_delete=models.CASCADE,
+                            blank=True,
+                            null=True)
     post = models.ForeignKey('news.NewsPost', verbose_name=_('post'), related_name='comments', on_delete=models.CASCADE)
     author = models.ForeignKey(UserModel, related_name='comments', on_delete=models.CASCADE, null=True)
     text = RichTextField(config_name='simple')
@@ -32,4 +33,3 @@ class Comment(MPTTModel):
 
     def __str__(self):
         return f'Comment # {self.pk}'
-
