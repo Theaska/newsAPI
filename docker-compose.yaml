@@ -8,7 +8,7 @@ services:
                 cat /app/migrations.sh | sed -i 's/\r//' /app/migrations.sh &&
                 /app/migrations.sh &&
                 python3 /app/newsAPI/manage.py collectstatic --noi &&
-                python3 /app/newsAPI/manage.py createsuperuser --username admin --email admin@admin.com --password admin &&
+                python3 /app/newsAPI/manage.py createsuperuser --noinput &&
                 python3 /app/newsAPI/manage.py runserver 0:80"
     volumes:
       - .:/app
@@ -18,6 +18,9 @@ services:
       - DB_USER=postgres
       - DB_PASS=postgres
       - DB_HOST=postgres
+      - DJANGO_SUPERUSER_PASSWORD=admin
+      - DJANGO_SUPERUSER_USERNAME=admin
+      - DJANGO_SUPERUSER_EMAIL="admin@admin.com"
       - SECRET_KEY="d4%-lz%e%84okvsw@(-4-=2y0s28z7n()%h0phe7zrz8q17tgk"
     ports:
       - "80:80"
