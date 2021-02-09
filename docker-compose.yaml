@@ -20,7 +20,7 @@ services:
       - DB_HOST=postgres
       - DJANGO_SUPERUSER_PASSWORD=admin
       - DJANGO_SUPERUSER_USERNAME=admin
-      - DJANGO_SUPERUSER_EMAIL="admin@admin.com"
+      - DJANGO_SUPERUSER_EMAIL=admin@mail.com
       - SECRET_KEY="d4%-lz%e%84okvsw@(-4-=2y0s28z7n()%h0phe7zrz8q17tgk"
     ports:
       - "80:80"
