@@ -3,10 +3,12 @@ services:
   webapp:
     build: .
     entrypoint: >
-      bash -c "chmod +x /app/migrations.sh &&
-               cat /app/migrations.sh | sed -i 's/\r//' /app/migrations.sh &&
+      bash -c "sleep 5s &&
+                chmod +x /app/migrations.sh &&
+                cat /app/migrations.sh | sed -i 's/\r//' /app/migrations.sh &&
                 /app/migrations.sh &&
                 python3 /app/newsAPI/manage.py collectstatic --noi &&
+                python3 /app/newsAPI/manage.py createsuperuser --username admin --email admin@admin.com --password admin &&
                 python3 /app/newsAPI/manage.py runserver 0:80"
     volumes:
       - .:/app
