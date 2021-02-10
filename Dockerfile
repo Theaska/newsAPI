@@ -12,4 +12,4 @@ RUN apk update && \
 RUN pip install --upgrade -r requirements.txt
 RUN apk update && apk add bash
 
-CMD ["postgres"]
+CMD ["postgres", "python"]

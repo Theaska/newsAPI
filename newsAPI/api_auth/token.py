@@ -52,12 +52,6 @@ class Token:
     def get_payload(self):
         return {}
     
-    def check_expire_time(self):
-        if timezone.now().timestamp() > self.expired_tome.timestamp():
-            return False
-        else:
-            return True
-    
     @property
     def token_md5_hash(self):
         return hashlib.md5(self.token.encode('utf-8'))
