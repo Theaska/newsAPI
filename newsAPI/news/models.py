@@ -9,7 +9,7 @@ UserModel = get_user_model()
 class NewsPost(models.Model):
     author = models.ForeignKey(UserModel, related_name='news_posts', on_delete=models.CASCADE)
     title = models.CharField(_('title'), max_length=128)
-    slug = models.SlugField(_('slug'))
+    slug = models.SlugField(_('slug'), unique=True)
     text = RichTextField(config_name='default')
     date = models.DateTimeField(auto_now=True)
 
