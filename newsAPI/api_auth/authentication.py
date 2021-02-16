@@ -14,6 +14,9 @@ UserModel = get_user_model()
 
 
 class TokenAuthentication(BaseAuthentication):
+    """
+        Authentication class for getting user with using JWT.
+    """
     def authenticate(self, request):
         headers = request.headers
         header_auth_key = self.authenticate_header(request)
@@ -23,6 +26,10 @@ class TokenAuthentication(BaseAuthentication):
             return self.get_user(token), token
 
     def encode_and_get_token(self, encoded_token):
+        """
+            Encode token from header and check it.
+        """
+        # check if token can be decoded
         try:
             b64_decoded = base64.b64decode(encoded_token)
         except binascii.Error:
@@ -32,7 +39,8 @@ class TokenAuthentication(BaseAuthentication):
             decoded_token = AuthToken.decode_token(b64_decoded)
         except jwt_exceptions.DecodeError:
             raise exceptions.AuthenticationFailed(_('Invalid access token'))      
-
+            
+        # check token lifetime
         expired_time = decoded_token.get('expired_time')
         if timezone.now().timestamp() > expired_time:
             raise exceptions.AuthenticationFailed(_('Lifetime of access token is ended. Please, update your token'))
@@ -40,6 +48,9 @@ class TokenAuthentication(BaseAuthentication):
         return decoded_token
 
     def get_user(self, token):
+        """
+            Get user id from token and return user object
+        """
         user_id = token.get('user')
         try:
             user = UserModel.objects.get(pk=user_id)

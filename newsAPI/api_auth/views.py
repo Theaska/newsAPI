@@ -11,6 +11,15 @@ from .serializers import UserSerializer, ObtainTokensPairSerializer, ObtainAcces
 
 
 class UserViewSet(ModelViewSet):
+    """
+        ModelViewSet for:
+            1. getting list of users (for Admin user),
+            2. creating new user,
+            3. getting information about user with selected user id (for Admin user),
+            4. ban user with selected user id (for Admin user),
+            5. unban user with selected user id (for Admin user).
+
+    """
     model = get_user_model()
     serializer_class = UserSerializer
 
@@ -24,6 +33,7 @@ class UserViewSet(ModelViewSet):
         return [permission() for permission in permissions_lst]
 
     def ban_user(self, *args, **kwargs):
+        """ Ban user with user_id getting from request params. """
         user = self.get_object()
         try:
             user.ban()
@@ -34,6 +44,7 @@ class UserViewSet(ModelViewSet):
         return Response(data={'message': message}, status=status.HTTP_200_OK)
 
     def unban_user(self, *args, **kwargs):
+        """ Unan user with user_id getting from request params. """
         user = self.get_object()
         try:
             user.unban()
@@ -45,6 +56,9 @@ class UserViewSet(ModelViewSet):
 
 
 class ObtainTokensPairView(GenericAPIView):
+    """
+        View for obtaining access and refresh token for user.
+    """
     serializer_class = ObtainTokensPairSerializer
 
     def post(self, request):
@@ -56,6 +70,9 @@ class ObtainTokensPairView(GenericAPIView):
 
 
 class ObtainAccessTokenView(GenericAPIView):
+    """
+        View for updating access and refresh token using old refresh token.
+    """
     serializer_class = ObtainAccessTokenSerializer
     
     def post(self, request):

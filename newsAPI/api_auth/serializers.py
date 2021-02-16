@@ -14,9 +14,9 @@ user_model = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
-    """ Serializer for creating/signup new user """
-    is_banned = serializers.ReadOnlyField()
-    
+    """ 
+        Serializer for creating/signup new user. 
+    """
     def create(self, data):
         user = self.Meta.model.objects.create(
             username=data['username'],
@@ -28,11 +28,13 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = user_model
-        fields = ('id', 'username', 'password', 'email', 'is_banned')
+        fields = ('id', 'username', 'password', 'email')
 
 
 class ObtainTokensPairSerializer(serializers.Serializer):
-    """ Serializer for creating new access and refresh tokens after authentication """
+    """ 
+        Serializer for creating and getting refresh token and access token. 
+    """
     
     username = serializers.CharField()
     password = serializers.CharField()
@@ -58,11 +60,17 @@ class ObtainTokensPairSerializer(serializers.Serializer):
 
 
 class ObtainAccessTokenSerializer(serializers.Serializer):
-    """ Serializer for creating new pairs of access and refresh tokens using refresh token """
+    """ 
+        Serializer for creating new pairs of access and refresh tokens using refresh token.
+    """
     
     refresh_token = serializers.CharField()
 
     def validate(self, data):
+        """
+            Validate old refresh token.
+        """
+
         encoded_token = data.get('refresh_token')
         try:
             token = base64.b64decode(encoded_token)
@@ -75,16 +83,17 @@ class ObtainAccessTokenSerializer(serializers.Serializer):
         except exceptions.DecodeError:
             raise serializers.ValidationError(_('Can not decode refresh token'))
         
+        # check if user with user id exists
         try:
             user = user_model.objects.get(pk=user_id)
         except user_model.DoesNotExist:
             raise serializers.ValidationError(_('Can not find user with refresh token'))
         
-        # compare hash refresh token from request with hash RT in DB
+        # compare hash refresh token from request with hash refresh token in DB
         if not user.refresh_token_hash == hashlib.md5(token).hexdigest():
             raise serializers.ValidationError(_('Invalid refresh token for user'))
         
-        # check if time is ended
+        # check if lifetime of refresh token is ended
         if not self.validate_exp_time(decoded_token):
             raise serializers.ValidationError(_('Lifetime of your refresh token'))
         else:
