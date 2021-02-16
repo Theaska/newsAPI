@@ -12,7 +12,7 @@
 
 - Перейти в папку с Dockerfile
 - Ввести команду ` docker-compose build `. Дождаться окончания сборки 
-- Ввести команду ` docker-compose run `. 
+- Ввести команду ` docker-compose up `. 
 - Перейти на http://localhost/ 
 
 <h2> Для создания суперпользователя </h2>
