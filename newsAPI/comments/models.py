@@ -11,6 +11,14 @@ MAX_DEPTH = 5
 
 
 class Comment(MPTTModel):
+    """
+        Model of comments.
+        parent:     parent comment, if current comment is answer of another comment.
+        post:       post on which comment was left.
+        author:     author of post
+        text:       post's text 
+        date:       date created
+    """
     parent = TreeForeignKey('self',
                             related_name='child_comments',
                             on_delete=models.CASCADE,
@@ -26,8 +34,11 @@ class Comment(MPTTModel):
         verbose_name_plural = _('News Comments')
 
     def clean(self):
+        # check level 
         if self.parent and self.parent.get_level() >= MAX_DEPTH:
             raise ValidationError(_('Can not add more nodes'))
+        
+        # post of parent comment have to be post of current comment
         if self.parent and self.parent.post != self.post:
             raise ValidationError(_('Comment must be connected with {} post'.format(self.parent.post)))
 

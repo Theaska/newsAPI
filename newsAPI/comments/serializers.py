@@ -7,7 +7,11 @@ from .models import Comment, MAX_DEPTH
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    """
+        Serializer for creating root comments. 
+    """
     comment_author = serializers.SerializerMethodField()
+    parent = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
     author = serializers.HiddenField(
         default=serializers.CurrentUserDefault()
     )
@@ -32,6 +36,9 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class AnswerSerializer(serializers.ModelSerializer):
+    """
+        Serializer for answering to comment.
+    """
     comment_author = serializers.SerializerMethodField()
     post = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
     parent = serializers.PrimaryKeyRelatedField(many=False, read_only=True)

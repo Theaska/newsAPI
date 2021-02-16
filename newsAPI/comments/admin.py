@@ -6,6 +6,7 @@ from .models import Comment
 class CommentsForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CommentsForm, self).__init__(*args, **kwargs)
+        # exlude self from parent queryset
         self.fields['parent'].queryset = self.fields['parent'].queryset.exclude(pk=self.instance.pk)
 
 
@@ -15,8 +16,7 @@ class CommentsAdminInline(admin.StackedInline):
     form = CommentsForm
 
     def wrap_callback(self, request, obj=None, **kwargs):
-        """ Для того, чтобы в поле parent показывались только комментарии к данному посту """
-        obj = obj
+        """ For showing only comments for current post object """
 
         def callback(field, **kwargs):
             nf = field.formfield(**kwargs)

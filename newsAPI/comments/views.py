@@ -37,8 +37,10 @@ class CommentViewSet(ModelViewSet):
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        main_comment = self.get_object()
-        new_comment = serializer.save()
+        main_comment = self.get_object()  # parent comment
+        new_comment = serializer.save()   # current comment (answer)
+        
+        # don't send message if author of root comment has left answer comment
         receiver_email = main_comment.author.email if main_comment.author else None
         if receiver_email and new_comment.author != main_comment.author:
             send_notification(template_name='comments/new_answer_to_comment.html',
